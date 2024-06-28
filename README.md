@@ -1,8 +1,8 @@
-#ELF_Cytokine_Analysis: Correlation analysis with Python & PCA with R
-###Teiji Sawa, MD, PhD, Kyoto Prefectural University of Medicine
+# ELF_Cytokine_Analysis: Correlation analysis with Python & PCA with R
+## Teiji Sawa, MD, PhD, Kyoto Prefectural University of Medicine
 Apr 23, 2024 
 
-###ELF_Cytokine_Analysis PCA, Apr 23, 2024. R (v.4.3.2)
+### ELF_Cytokine_Analysis PCA, Apr 23, 2024. R (v.4.3.2)
 --------------------------------------------------------------------------
  ELF_Cytokine Principal Component Analysis
  Apr 23, 2024 R (v.4.3.2) PCA by Teiji Sawa, MD, PhD
@@ -16,7 +16,7 @@ Apr 23, 2024
  DOI: doi:10.1186/s13054-024-04921-3
 --------------------------------------------------------------------------
 
- ###ELF_Cytokine_Analysis PCA, Apr 23, 2024. R (v.4.3.2)
+ ### ELF_Cytokine_Analysis PCA, Apr 23, 2024. R (v.4.3.2)
 --------------------------------------------------------------------------
  ELF_Cytokine Principal Component Analysis
  Apr 23, 2024 R (v.4.3.2) PCA by Teiji Sawa, MD, PhD
