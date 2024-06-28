@@ -30,6 +30,6 @@ Kyoto Prefectural University of Medicine, Japan</p>
  cytokines in the bronchial epithelial lining fluid of COVID-19 
  patients with acute hypoxemic respiratory failure. </p>
  <p>  Journal: Critical Care volume 28: 134, 2024. </p>
- <p>  DOI: doi:10.1186/s13054-024-04921-3</p>
+ <p>  DOI <a href="https//: doi.org/10.1186/s13054-024-04921-3">Sudo K, et al., Critical Care volume 28: 134, 2024</a></p>
  <p> --------------------------------------------------------------------------</p>
 
