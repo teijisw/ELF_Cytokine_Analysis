@@ -1,0 +1,425 @@
+# ELF_Cytokine_Analysis PCA, Apr 23, 2024. R (v.4.3.2)
+#--------------------------------------------------------------------------
+# ELF_Cytokine Principal Component Analysis
+# Apr 23, 2024 R (v.4.3.2) PCA by Teiji Sawa, MD, PhD
+# Kyoto Prefectural University of Medicine, Japan
+# For the analyses of the following publication:
+# Authors: Sazuki Sudo, others & Teiji Sawa. 
+# Title: Case study observational research: inflammatory 
+# cytokines in the bronchial epithelial lining fluid of COVID-19 
+# patients with acute hypoxemic respiratory failure. 
+# Journal: Critical Care volume 28: 134, 2024. 
+# DOI: doi:10.1186/s13054-024-04921-3
+#--------------------------------------------------------------------------
+
+#-[R Code #1]-------------------------------------------------
+install.packages("FactoMineR") 
+install.packages("factoextra")
+library(ggplot2)
+library(GGally)
+library(FactoMineR)
+library(factoextra)
+library(tidyverse)
+#-[END]-----------------------------------------------------------
+
+#-[R Code #2]-------------------------------------------------
+data1 <- read_csv("pMOL_ELF4_r25_p27_20240301_PCA2.csv", show_col_types = FALSE)
+data2 <-read_csv("pMOL_Plasma4_r25_p27_20240301_PCA2.csv", show_col_types = FALSE) 
+#-[END]-----------------------------------------------------------
+  
+#-[R Code #3]-------------------------------------------------
+pca_d1 <- PCA(data1[,9:29], graph =FALSE)
+pca_d2 <- PCA(data2[,9:22], graph =FALSE)  
+#-[END]-----------------------------------------------------------
+
+#-[R Code #4]-------------------------------------------------
+fviz_screeplot(pca_d1, addlabels =TRUE, ylim =c(0, 50))
+#-[END]-----------------------------------------------------------
+
+#-[R Code #5]-------------------------------------------------
+fviz_pca_var(pca_d1,axes= c(1,2), col.var ="contrib", repel =TRUE)
+#-[END]-----------------------------------------------------------
+
+#-[R Code #6]-------------------------------------------------
+fviz_pca_var(pca_d1, axes= c(1,2), col.var ="contrib", repel =TRUE) + scale_color_gradient2(low="white", mid="blue", high="red", midpoint=0.6)
+fviz_pca_var(pca_d1, axes= c(2,3), col.var ="contrib", repel =TRUE) + scale_color_gradient2(low="white", mid="blue", high="red", midpoint=0.6)
+fviz_pca_var(pca_d1, axes= c(3,1), col.var ="contrib", repel =TRUE) + scale_color_gradient2(low="white", mid="blue", high="red", midpoint=0.6)
+#-[END]-----------------------------------------------------------
+
+#-[R Code #7]-------------------------------------------------
+fviz_contrib(pca_d1, choice = "var", axes = 1) 
+fviz_contrib(pca_d1, choice = "var", axes = 2)
+fviz_contrib(pca_d1, choice = "var", axes = 3)
+#-[END]-----------------------------------------------------------
+
+#-[R Code #8]-------------------------------------------------
+fviz_pca_ind(pca_d1, geom.ind="point", axes= c(1,2), habillage =as.factor(data1$liv_group), legend.title = "LIV", repel=TRUE, addEllipses =TRUE) 
+fviz_pca_ind(pca_d1, geom.ind="point", axes= c(2,3), habillage =as.factor(data1$liv_group), legend.title = "LIV", repel=TRUE, addEllipses =TRUE)
+fviz_pca_ind(pca_d1, geom.ind="point", axes= c(3,1), habillage =as.factor(data1$liv_group), legend.title = "LIV", repel=TRUE, addEllipses =TRUE)
+#-[END]-----------------------------------------------------------
+
+#-[R Code #9]-------------------------------------------------
+fviz_screeplot(pca_d2, addlabels =TRUE, ylim =c(0, 50))
+#-[END]-----------------------------------------------------------
+
+#-[R Code #10]-------------------------------------------------
+fviz_pca_var(pca_d2,axes= c(1,2), col.var ="contrib", repel =TRUE) 
+#-[END]-----------------------------------------------------------
+
+#-[R Code #11]-------------------------------------------------
+fviz_pca_var(pca_d2, axes= c(1,2), col.var ="contrib", repel =TRUE) + scale_color_gradient2(low="white", mid="blue", high="red", midpoint=0.6) 
+fviz_pca_var(pca_d2, axes= c(2,3), col.var ="contrib", repel =TRUE) + scale_color_gradient2(low="white", mid="blue", high="red", midpoint=0.6)
+fviz_pca_var(pca_d2, axes= c(3,1), col.var ="contrib", repel =TRUE) + scale_color_gradient2(low="white", mid="blue", high="red", midpoint=0.6) 
+#-[END]-----------------------------------------------------------
+
+#-[R Code #12]-------------------------------------------------
+fviz_contrib(pca_d2, choice = "var", axes = 1) 
+fviz_contrib(pca_d2, choice = "var", axes = 2)
+fviz_contrib(pca_d2, choice = "var", axes = 3) 
+#-[END]-----------------------------------------------------------
+ 
+#-[R Code #13]-------------------------------------------------
+fviz_pca_ind(pca_d2, geom.ind="point", axes= c(1,2), habillage =as.factor(data1$liv_group), legend.title = "LIV", repel=TRUE, addEllipses =TRUE)
+fviz_pca_ind(pca_d2, geom.ind="point", axes= c(2,3), habillage =as.factor(data1$liv_group), legend.title = "LIV", repel=TRUE, addEllipses =TRUE) 
+fviz_pca_ind(pca_d2, geom.ind="point", axes= c(3,1), habillage =as.factor(data1$liv_group), legend.title = "LIV", repel=TRUE, addEllipses =TRUE)
+#-[END]-----------------------------------------------------------
+  
+#-[R Code #14]-------------------------------------------------
+library(corrplot)
+corrplot 0.92 loaded
+#-[END]-----------------------------------------------------------
+
+#-[R Code #15]-------------------------------------------------
+var1 <- get_pca_var(pca_d1)
+#-[END]-----------------------------------------------------------
+
+#-[R Code #16]-------------------------------------------------
+pca_d1 %>% fviz_pca_var(col.var1 = "black") 
+#-[END]-----------------------------------------------------------
+
+#-[R Code #17]-------------------------------------------------
+var1$cos2 %>% round(4) 
+#-[END]-----------------------------------------------------------
+
+#-[R Code #18]-------------------------------------------------
+var1$cos2 %>% corrplot(is.corr = FALSE) 
+#-[END]-----------------------------------------------------------
+
+#-[R Code #19]-------------------------------------------------
+var2 <- get_pca_var(pca_d2)
+#-[END]-----------------------------------------------------------
+
+#-[R Code #20]-------------------------------------------------
+pca_d2 %>% fviz_pca_var(col.var2 = "black") 
+#-[END]-----------------------------------------------------------
+
+#-[R Code #21]-------------------------------------------------
+var2$cos2 %>% round(4)
+#-[END]-----------------------------------------------------------
+
+#-[R Code #22]-------------------------------------------------
+var2$cos2 %>% corrplot(is.corr = FALSE)
+#-[END]-----------------------------------------------------------
+ 
+ELF_Cytokine_統計解析 PCA, Apr 23, 2024 Python 3.18
+
+#-[Python Code #1]-------------------------------------------------
+from sklearn.preprocessing import StandardScaler
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.colors import ListedColormap
+#pip install pca
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #2]-------------------------------------------------
+data_ELF_all = pd.read_csv('Data5_ELF_PCA_20240426_selected.csv')
+data_plasma_all = pd.read_csv('Data6_Plasma_PCA_20240426_selected.csv')
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #3]-------------------------------------------------
+data_all_ELF = data_all[data_all.source=='elf']
+data_all_plasma = data_all[data_all.source=='plasma']
+
+data_ELF = data_all_ELF.iloc[:,3:23]
+data_plasma = data_all_plasma.iloc[:,3:16]
+data_LIV = data_all.iloc[0:27,2]
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #4]-------------------------------------------------
+ELF = data_ELF.to_numpy()
+plasma= data_plasma.to_numpy()
+LIV_group = data_LIV.to_numpy()
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #5]-------------------------------------------------
+scaler1 = StandardScaler(with_mean=True, with_std=True)
+scaler2 = StandardScaler(with_mean=True, with_std=True)
+ELF_std = scaler1.fit_transform(ELF)
+plasma_std = scaler2.fit_transform(plasma)
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #6]-------------------------------------------------
+Cytokines_ELF= ['IL-6','IFN-g','MCP-1','MIP-1b','IL-10','IL-2','IL-5','IL-12p70','IL-7',\
+           'GM-CSF','IL-4','G-CSF','IL-8','IL-1b','TNF-a','IL-31','IL-17A', \
+           'IL-23','IL-25','sCD40L','IL-21','IL-22','IL-17F','IL-33','IL-13']
+
+cytokines_plasma= ['IL-6','MCP-1','MIP-1b','IL-10',\
+           'IL-5','IL-12p70','GM-CSF','G-CSF','IL-8','IL-1b','TNF-a', \
+           'IL-33','IL-13' ]
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #7]-------------------------------------------------
+from pca import pca
+# Initialize
+model = pca(normalize = True)
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #8]-------------------------------------------------
+from pca import pca
+# Initialize
+model2 = pca(normalize = True)
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #9]-------------------------------------------------
+# Fit transform and include the column labels and row labels
+results_ELF = model.fit_transform(ELF_std, col_labels=cytokines_ELF, \
+row_labels=LIV_group)
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #10]-------------------------------------------------
+# Fit transform and include the column labels and row labels
+results_plasma = model2.fit_transform(plasma_std, col_labels=cytokines_plasma, \
+row_labels=LIV_group)
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #11]-------------------------------------------------
+fig, ax = model.plot()
+fig, ax = model.biplot3d(SPE=True,
+                        HT2=True, arrowdict={'scale_factor': 3, \
+'color_strong': 'red', 'color_weak': 'blue'}, s=500,
+                        cmap="rainbow", density= True)
+ax.set_xlim(-5, 5)
+ax.set_ylim(-5, 5)
+ax.set_zlim(-5, 5)
+ax.legend(loc=1)
+plt.savefig('Fig1_3D_ELF.svg')
+plt.savefig('Fig1_3D_ELF.png')
+plt.show()
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #12]-------------------------------------------------
+fig, ax = model2.biplot3d(SPE=True,
+                        HT2=True, arrowdict={'scale_factor': 3, \
+'color_strong': 'red', 'color_weak': 'blue'}, s=500,
+                        cmap="rainbow", density= True)
+ax.set_xlim(-5, 5)
+ax.set_ylim(-5, 5)
+ax.set_zlim(-5, 5)
+ax.legend(loc=1)
+plt.savefig('Fig2_3D_plasma.svg')
+plt.savefig('Fig2_3D_plasma.png')
+plt.show()
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #13]-------------------------------------------------
+# All available markers
+markers = np.array(['o:blue', 'o:orange', 'o:red'])
+# Generate random integers
+random_integers = np.random.randint(0, len(markers), size=ELF_std.shape[0])
+# Draw markers
+marker = markers
+# Set alpha
+alpha = np.random.rand(1, ELF_std.shape[0])[0][random_integers]
+
+fig, ax = model.biplot(PC= [0, 1],
+                        SPE= True,
+                        HT2= True,
+                        s=400,
+                        cmap="rainbow",
+                        marker=marker,
+                        n_feat=27,
+                        fontsize=16,
+                        fontweight='normal',
+                        arrowdict={'fontsize': 6, 'scale_factor': 3, \
+'color_strong': 'r', 'color_weak': 'b'},
+                        density= True,
+                        density_on_top=False,
+                        figsize= (12,12)
+                        )
+ax.set_xlim(-8, 8)
+ax.set_ylim(-8, 8)
+
+ax.legend(loc=1)
+plt.savefig('Fig3_ELF_DIM1&2.svg')
+plt.savefig('Fig3_ELF_DIM1&2.png')
+plt.show()
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #14]-------------------------------------------------
+# All available markers
+# Generate random integers
+random_integers = np.random.randint(0, len(markers), size=ELF_std.shape[0])
+# Draw markers
+marker = markers
+# Set alpha
+alpha = np.random.rand(1, ELF_std.shape[0])[0][random_integers]
+
+fig, ax = model.biplot(PC= [1, 2],
+                        SPE= True,
+                        HT2= True,
+                        s=400,
+                        cmap="rainbow",
+                        marker=marker,
+                        n_feat=27,
+                        fontsize=16,
+                        fontweight='normal',
+                        arrowdict={'fontsize': 6, 'scale_factor': 3, \
+'color_strong': 'r', 'color_weak': 'b'},
+                        density= True,
+                        density_on_top=False,
+                        figsize= (12,12)
+                        )
+ax.set_xlim(-8, 8)
+ax.set_ylim(-8, 8)
+
+ax.legend(loc=1)
+plt.savefig('Fig4_ELF_DIM2&3.svg')
+plt.savefig('Fig4_ELF_DIM2&3.png')
+plt.show()
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #15]-------------------------------------------------
+# All available markers
+# Generate random integers
+random_integers = np.random.randint(0, len(markers), size=ELF_std.shape[0])
+# Draw markers
+marker = markers
+# Set alpha
+alpha = np.random.rand(1, ELF_std.shape[0])[0][random_integers]
+
+fig, ax = model.biplot(PC= [2, 0],
+                        SPE= True,
+                        HT2= True,
+                        s=400,
+                        cmap="rainbow",
+                        marker=marker,
+                        n_feat=27,
+                        fontsize=16,
+                        fontweight='normal',
+                        arrowdict={'fontsize': 6, 'scale_factor': 3, \
+'color_strong': 'r', 'color_weak': 'b'},
+                        density= True,
+                        density_on_top=False,
+                        figsize= (12,12)
+                        )
+ax.set_xlim(-8, 8)
+ax.set_ylim(-8, 8)
+
+ax.legend(loc=1)
+plt.savefig('Fig5_ELF_DIM3&1.svg')
+plt.savefig('Fig5_ELF_DIM3&1.png')
+plt.show()
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #16]-------------------------------------------------
+# All available markers
+markers = np.array(['o:blue', 'o:orange', 'o:red'])
+# Generate random integers
+random_integers = np.random.randint(0, len(markers), size=plasma_std.shape[0])
+# Draw markers
+marker = markers
+# Set alpha
+alpha = np.random.rand(1, plasma_std.shape[0])[0][random_integers]
+
+fig, ax = model2.biplot(PC= [0, 1],
+                        SPE= True,
+                        HT2= True,
+                        s=400,
+                        cmap="rainbow",
+                        marker=marker,
+                        n_feat=27,
+                        fontsize=16,
+                        fontweight='normal',
+                        arrowdict={'fontsize': 6, 'scale_factor': 1, \
+'color_strong': 'r', 'color_weak': 'b'},
+                        density= True,
+                        density_on_top=False,
+                        figsize= (12,12)
+                        )
+ax.set_xlim(-8, 8)
+ax.set_ylim(-8, 8)
+
+ax.legend(loc=1)
+plt.savefig('Fig6_plasma_DIM1&2.svg')
+plt.savefig('Fig6_plasma_DIM1&2.png')
+plt.show()
+#-[END]------------------------------------------------------------
+
+#-[Python Code #17]-------------------------------------------------
+# All available markers
+markers = np.array(['o:blue', 'o:orange', 'o:red'])
+# Generate random integers
+random_integers = np.random.randint(0, len(markers), size=plasma_std.shape[0])
+# Draw markers
+marker = markers
+# Set alpha
+alpha = np.random.rand(1, plasma_std.shape[0])[0][random_integers]
+
+fig, ax = model2.biplot(PC= [1, 2],
+                        SPE= True,
+                        HT2= True,
+                        s=400,
+                        cmap="rainbow",
+                        marker=marker,
+                        n_feat=27,
+                        fontsize=16,
+                        fontweight='normal',
+                        arrowdict={'fontsize': 6, 'scale_factor': 1, \
+'color_strong': 'r', 'color_weak': 'b'},
+                        density= True,
+                        density_on_top=False,
+                        figsize= (12,12)
+                        )
+ax.set_xlim(-8, 8)
+ax.set_ylim(-8, 8)
+
+ax.legend(loc=1)
+plt.savefig('Fig7_plasma_DIM2&3.svg')
+plt.savefig('Fig7_plasma_DIM2&3.png')
+plt.show()
+#-[END]------------------------------------------------------------
+
+#-[Python Code #18]-------------------------------------------------
+# All available markers
+markers = np.array(['o:blue', 'o:orange', 'o:red'])
+# Generate random integers
+random_integers = np.random.randint(0, len(markers), size=plasma_std.shape[0])
+# Draw markers
+marker = markers
+# Set alpha
+alpha = np.random.rand(1, plasma_std.shape[0])[0][random_integers]
+
+fig, ax = model2.biplot(PC= [2, 0],
+                        SPE= True,
+                        HT2= True,
+                        s=400,
+                        cmap="rainbow",
+                        marker=marker,
+                        n_feat=27,
+                        fontsize=16,
+                        fontweight='normal',
+                        arrowdict={'fontsize': 6, 'scale_factor': 1, \
+ 'color_strong': 'r', 'color_weak': 'b'},
+                        density= True,
+                        density_on_top=False,
+                        figsize= (12,12)
+                        )
+ax.set_xlim(-8, 8)
+ax.set_ylim(-8, 8)
+
+ax.legend(loc=1)
+plt.savefig('Fig8_plasma_DIM3&1.svg')
+plt.savefig('Fig8_plasma_DIM3&1.png')
+plt.show()
+#-[END]------------------------------------------------------------

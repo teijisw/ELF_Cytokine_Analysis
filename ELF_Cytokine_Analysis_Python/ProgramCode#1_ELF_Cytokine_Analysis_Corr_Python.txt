@@ -1,0 +1,360 @@
+# ELF_Cytokine_Analysis Corr, Apr 23, 2024. Python 3.18
+#--------------------------------------------------------------------------
+# ELF_Cytokine_Stats Analysis. Corr
+# Apr 23, 2024 Python 3.18 by Teiji Sawa, MD, PhD
+# Kyoto Prefectural University of Medicine, Japan
+# For the analyses of the following publication:
+# Authors: Sazuki Sudo, others & Teiji Sawa. 
+# Title: Case study observational research: inflammatory 
+# cytokines in the bronchial epithelial lining fluid of COVID-19 
+# patients with acute hypoxemic respiratory failure. 
+# Journal: Critical Care volume 28: 134, 2024. 
+# DOI: doi:10.1186/s13054-024-04921-3
+#--------------------------------------------------------------------------
+
+#-[Python Code #1]-------------------------------------------------
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #2]-------------------------------------------------
+data_all = pd.read_csv('Data1_ELF&Plasma_wNormal_20240423.csv')
+data_all
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #3]-------------------------------------------------
+data_all_ELF = data_all[data_all.source=='ELF']
+data_all_ELF
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #4]-------------------------------------------------
+fig, ax = plt.subplots(figsize= (12, 10))
+sns.boxplot(x='cytokine', y='conc', data=data_all_ELF, hue='group', \
+hue_order= ['normal', 'covid'],
+            order= ['GCSF','GMCSF','IFNg','MCP1','MIP1b','TNFa', \
+'sCD40L','IL1b','IL2','IL4','IL5','IL6','IL7','IL8','IL10', \
+'IL12p70','IL13','IL17A','IL17F','IL21','IL22','IL23', \
+'IL25','IL31','IL33'],
+                 palette= ["skyblue", "pink"],
+                 dodge=True, color='black', ax=ax,
+                 linewidth=0.8, 
+                 fliersize=2
+           )
+
+sns.stripplot(x='cytokine', y='conc', data=data_all_ELF, dodge=True, \
+ jitter=True, hue='group', hue_order= ['normal', 'covid'],
+            order= ['GCSF','GMCSF','IFNg','MCP1','MIP1b','TNFa', \
+'sCD40L','IL1b','IL2','IL4','IL5','IL6','IL7','IL8','IL10', \
+'IL12p70','IL13','IL17A','IL17F','IL21','IL22','IL23', \
+'IL25','IL31','IL33'],
+             palette= ["blue", "red"], ax=ax, size=4)
+
+ax.set_yscale('symlog')
+ax.set_ylim([0, 1000000]) 
+ax.legend()
+
+plt.xticks(rotation=90) 
+plt.savefig('Fig1_ELF_all.svg')
+plt.savefig('Fig1_ELF_all.png')
+plt.show()
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #5]-------------------------------------------------
+data_all_plasma = data_all[data_all.source='plasma']
+data_all_plasma
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #6]-------------------------------------------------
+fig, ax = plt.subplots(figsize=(12, 10))
+sns.boxplot(x='cytokine', y='conc', data=data_all_plasma, \
+hue='group', hue_order= ['normal', 'covid'],
+            order= ['GCSF','GMCSF','IFNg','MCP1','MIP1b','TNFa', \
+'sCD40L','IL1b','IL2','IL4','IL5','IL6','IL7','IL8','IL10', \
+'IL12p70','IL13','IL17A','IL17F','IL21','IL22','IL23', \
+'IL25','IL31','IL33'],
+                 palette= ["skyblue", "pink"],
+                 dodge=True, color='black', ax=ax,
+                 linewidth=0.8, 
+                 fliersize=2
+           )
+
+sns.stripplot(x='cytokine', y='conc', data=data_all_plasma, dodge=True, \
+jitter=True, hue='group', hue_order= ['normal', 'covid'],
+            order= ['GCSF','GMCSF','IFNg','MCP1','MIP1b','TNFa', \
+'sCD40L','IL1b','IL2','IL4','IL5','IL6','IL7','IL8','IL10', \
+'IL12p70','IL13','IL17A','IL17F','IL21','IL22','IL23', \
+'IL25','IL31','IL33'],
+              palette= ["blue", "red"], ax=ax, size=4)
+
+ax.set_yscale('symlog')
+ax.set_ylim([0, 100]) 
+ax.legend()
+
+plt.xticks(rotation=90)
+plt.savefig('Fig2_plasma_all.svg')
+plt.savefig('Fig2_plasma_all.png')
+plt.show()
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #7]-------------------------------------------------
+data_covid = pd.read_csv('Data2_ELFperPlasma_20240423.csv')
+data_covid.head(3)
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #8]-------------------------------------------------
+fig, ax = plt.subplots(figsize= (12, 10))
+
+sns.boxplot(x='cytokine', y='elf_per_plasma', data=data_covid,  
+       order= ['GCSF','GMCSF','IFNg','MCP1','MIP1b','TNFa', \
+'sCD40L','IL1b','IL2','IL4','IL5','IL6','IL7','IL8','IL10', \
+'IL12p70','IL13','IL17A','IL17F','IL21','IL22','IL23', \
+'IL25','IL31','IL33'],
+                 color='palegreen', ax=ax,
+                 linewidth=1.2, 
+                 fliersize=0.1,
+                 )
+
+sns.stripplot(x='cytokine', y='elf_per_plasma', data=data_covid, \
+jitter=True, color='green', 
+       order= ['GCSF','GMCSF','IFNg','MCP1','MIP1b','TNFa', \
+'sCD40L','IL1b','IL2','IL4','IL5','IL6','IL7','IL8','IL10', \
+'IL12p70','IL13','IL17A','IL17F','IL21','IL22','IL23', \
+'IL25','IL31','IL33'],
+              ax=ax, size=5)
+
+ax.set_yscale('symlog')
+#ax.set_yscale('log')
+ax.set_ylim([0.01, 1000000]) 
+
+plt.xticks(rotation=90)
+plt.savefig('Fig3_elf_per_plasma.svg')
+plt.savefig('Fig3_elf_per_plasma.png')
+plt.show()
+#-[END]-----------------------------------------------------------------
+
+# Correlation Analysis¶
+#-[Python Code #9]-------------------------------------------------
+data = pd.read_csv('Data3_ELF_20240423.csv')
+data.head(3)
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #10]-------------------------------------------------
+data_corr = data[['PSI','LIV','TNFa','IL1b','IL8','GCF','MIP1b','IL2', \
+'IL10','IL4','MCP1','IFNg','IL6','IL33','IL17F','IL22', \
+'IL21','IL31','IL23','IL17A','IL25','sCD40L']]
+data_all_r3 = data_corr.copy()
+data_all_r3.head(3)
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #11]-------------------------------------------------
+###Logarithmic
+# IL6: standardize
+X1 = data_all_r3.loc[:, ['IL6']]
+X1 = X1.apply(np.log)
+
+# IL8: standardize
+X2 = data_all_r3.loc[:, ['IL8']]
+X2 = X2.apply(np.log)
+
+# MCP1: standardize
+X3 = data_all_r3.loc[:, ['MCP1']]
+X3 = X3.apply(np.log)
+
+# MIP1b: standardize
+X4 = data_all_r3.loc[:, ['MIP1b']]
+X4 = X4.apply(np.log)
+
+# TNFa: standardize
+X5 = data_all_r3.loc[:, ['TNFa']]
+X5 = X5.apply(np.log)
+
+# IL10: standardize
+X6 = data_all_r3.loc[:, ['IL10']]
+X6 = X6.apply(np.log)
+
+# IL33: standardize
+X7 = data_all_r3.loc[:, ['IL33']]
+X7 = X7.apply(np.log)
+
+# IFNg: standardize
+X8 = data_all_r3.loc[:, ['IFNg']]
+X8 = X8.apply(np.log)
+
+# IL1b: standardize
+X9 = data_all_r3.loc[:, ['IL1b']]
+X9 = X9.apply(np.log)
+
+# GCF: standardize
+X10 = data_all_r3.loc[:, ['GCF']]
+X10 = X10.apply(np.log)
+
+# IL4: standardize
+X11 = data_all_r3.loc[:, ['IL4']]
+X11 = X11.apply(np.log)
+
+# IL17F: standardize
+X12 = data_all_r3.loc[:, ['IL17F']]
+X12 = X12.apply(np.log)
+
+# IL21: standardize
+X13 = data_all_r3.loc[:, ['IL21']]
+X13 = X13.apply(np.log)
+
+# IL22: standardize
+X14 = data_all_r3.loc[:, ['IL22']]
+X14 = X14.apply(np.log)
+
+# IL17A: standardize
+X15 = data_all_r3.loc[:, ['IL17A']]
+X15 = X15.apply(np.log)
+
+# IL23: standardize
+X16 = data_all_r3.loc[:, ['IL23']]
+X16 = X16.apply(np.log)
+
+# IL25: standardize
+X17 = data_all_r3.loc[:, ['IL25']]
+X17 = X17.apply(np.log)
+
+# IL31: standardize
+X18 = data_all_r3.loc[:, ['IL31']]
+X18 = X18.apply(np.log)
+
+# IL2: standardize
+X19 = data_all_r3.loc[:, ['IL2']]
+X19 = X19.apply(np.log)
+
+# sCD40L: standardize
+X24 = data_all_r3.loc[:, ['sCD40L']]
+X24 = X24.apply(np.log)
+
+# Output
+data_all_r3.loc[:, ['IL6']] = X1
+data_all_r3.loc[:, ['IL8']] = X2
+data_all_r3.loc[:, ['MCP1']] = X3
+data_all_r3.loc[:, ['MIP1b']] = X4
+data_all_r3.loc[:, ['TNFa']] = X5
+data_all_r3.loc[:, ['IL10']] = X6
+data_all_r3.loc[:, ['IL33']] = X7
+data_all_r3.loc[:, ['IFNg']] = X8
+data_all_r3.loc[:, ['IL1b']] = X9
+data_all_r3.loc[:, ['GCF']] = X10
+data_all_r3.loc[:, ['IL4']] = X11
+data_all_r3.loc[:, ['IL17F']] = X12
+data_all_r3.loc[:, ['IL21']] = X13
+data_all_r3.loc[:, ['IL22']] = X14
+data_all_r3.loc[:, ['IL17A']] = X15
+data_all_r3.loc[:, ['IL23']] = X16
+data_all_r3.loc[:, ['IL25']] = X17
+data_all_r3.loc[:, ['IL31']] = X18
+data_all_r3.loc[:, ['IL2']] = X19
+data_all_r3.loc[:, ['sCD40L']] = X24
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #12]-------------------------------------------------
+data_all_r3.head(3)
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #13]-------------------------------------------------
+data_all_r3 = data_all_r3.iloc[:,:]
+corr = data_all_r3.corr()
+print(corr)
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #14]-------------------------------------------------
+def display_correlation(df):
+    r = df.corr(method="spearman")
+    plt.figure(figsize= (12,10))
+    heatmap = sns.heatmap(df.corr(), vmin=-1, 
+                      vmax=1, annot=True, cmap='jet', \
+fmt='.2f', annot_kws={'fontsize': 12},)
+    plt.title("Spearman Correlation")
+    return(r)
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #15]-------------------------------------------------
+sns.set(font_scale=1.2)
+display_correlation(corr)
+plt.savefig('Fig4_spearman_elf.svg')
+plt.savefig('Fig4_spearman_elf.png')
+plt.show()
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #16]-------------------------------------------------
+data2 = pd.read_csv('Data4_Plasma_20240423.csv')
+data2.head(3)
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #17]-------------------------------------------------
+data2_corr = data2[['PSI','LIV','IL8','MCP1','IL6','TNFa','IL13','IL33', \
+                   'MIP1b','IL5','GMCF','GCF','IL10']]
+
+data2_all_r3 = data2_corr.copy()
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #18]-------------------------------------------------
+###Logarithmic
+# IL6: standardize
+X1 = data2_all_r3.loc[:, ['IL6']]
+X1 = X1.apply(np.log)
+
+# IL8: standardize
+X2 = data2_all_r3.loc[:, ['IL8']]
+X2 = X2.apply(np.log)
+
+# MCP1: standardize
+X3 = data2_all_r3.loc[:, ['MCP1']]
+X3 = X3.apply(np.log)
+
+# MIP1b: standardize
+X4 = data2_all_r3.loc[:, ['MIP1b']]
+X4 = X4.apply(np.log)
+
+# TNFa: standardize
+X5 = data2_all_r3.loc[:, ['TNFa']]
+X5 = X5.apply(np.log)
+
+# IL10: standardize
+X6 = data2_all_r3.loc[:, ['IL10']]
+X6 = X6.apply(np.log)
+
+# IL33: standardize
+X7 = data2_all_r3.loc[:, ['IL33']]
+X7 = X7.apply(np.log)
+
+# GCF: standardize
+X10 = data2_all_r3.loc[:, ['GCF']]
+X10 = X10.apply(np.log)
+
+## GMCF: standardize
+X25 = data2_all_r3.loc[:, ['GMCF']]
+X25 = X25.apply(np.log)
+
+# Output
+data2_all_r3.loc[:, ['IL6']] = X1
+data2_all_r3.loc[:, ['IL8']] = X2
+data2_all_r3.loc[:, ['MCP1']] = X3
+data2_all_r3.loc[:, ['MIP1b']] = X4
+data2_all_r3.loc[:, ['TNFa']] = X5
+data2_all_r3.loc[:, ['IL10']] = X6
+data2_all_r3.loc[:, ['IL33']] = X7
+data2_all_r3.loc[:, ['GCF']] = X10
+data2_all_r3.loc[:, ['GMCF']] = X25
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #19]-------------------------------------------------
+corr2 = data2_all_r3.corr()
+print(corr2)
+#-[END]-----------------------------------------------------------------
+
+#-[Python Code #20]-------------------------------------------------
+sns.set(font_scale =1.2)
+display_correlation(corr2)
+plt.savefig('Fig5_plasma_spearman.svg')
+plt.savefig('Fig5_plasma_spearman.png')
+plt.show()
+#-[END]-----------------------------------------------------------------
+
+
