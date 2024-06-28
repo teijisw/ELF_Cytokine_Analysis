@@ -1,0 +1,122 @@
+# ELF_Cytokine_Analysis PCA, Apr 23, 2024. R (v.4.3.2)
+#--------------------------------------------------------------------------
+# ELF_Cytokine Principal Component Analysis
+# Apr 23, 2024 R (v.4.3.2) PCA by Teiji Sawa, MD, PhD
+# Kyoto Prefectural University of Medicine, Japan
+# For the analyses of the following publication:
+# Authors: Sazuki Sudo, others & Teiji Sawa. 
+# Title: Case study observational research: inflammatory 
+# cytokines in the bronchial epithelial lining fluid of COVID-19 
+# patients with acute hypoxemic respiratory failure. 
+# Journal: Critical Care volume 28: 134, 2024. 
+# DOI: doi:10.1186/s13054-024-04921-3
+#--------------------------------------------------------------------------
+
+#-[R Code #1]-------------------------------------------------
+install.packages("FactoMineR") 
+install.packages("factoextra")
+library(ggplot2)
+library(GGally)
+library(FactoMineR)
+library(factoextra)
+library(tidyverse)
+#-[END]-----------------------------------------------------------
+
+#-[R Code #2]-------------------------------------------------
+data1 <- read_csv("pMOL_ELF4_r25_p27_20240301_PCA2.csv", show_col_types = FALSE)
+data2 <-read_csv("pMOL_Plasma4_r25_p27_20240301_PCA2.csv", show_col_types = FALSE) 
+#-[END]-----------------------------------------------------------
+  
+#-[R Code #3]-------------------------------------------------
+pca_d1 <- PCA(data1[,9:29], graph =FALSE)
+pca_d2 <- PCA(data2[,9:22], graph =FALSE)  
+#-[END]-----------------------------------------------------------
+
+#-[R Code #4]-------------------------------------------------
+fviz_screeplot(pca_d1, addlabels =TRUE, ylim =c(0, 50))
+#-[END]-----------------------------------------------------------
+
+#-[R Code #5]-------------------------------------------------
+fviz_pca_var(pca_d1,axes= c(1,2), col.var ="contrib", repel =TRUE)
+#-[END]-----------------------------------------------------------
+
+#-[R Code #6]-------------------------------------------------
+fviz_pca_var(pca_d1, axes= c(1,2), col.var ="contrib", repel =TRUE) + scale_color_gradient2(low="white", mid="blue", high="red", midpoint=0.6)
+fviz_pca_var(pca_d1, axes= c(2,3), col.var ="contrib", repel =TRUE) + scale_color_gradient2(low="white", mid="blue", high="red", midpoint=0.6)
+fviz_pca_var(pca_d1, axes= c(3,1), col.var ="contrib", repel =TRUE) + scale_color_gradient2(low="white", mid="blue", high="red", midpoint=0.6)
+#-[END]-----------------------------------------------------------
+
+#-[R Code #7]-------------------------------------------------
+fviz_contrib(pca_d1, choice = "var", axes = 1) 
+fviz_contrib(pca_d1, choice = "var", axes = 2)
+fviz_contrib(pca_d1, choice = "var", axes = 3)
+#-[END]-----------------------------------------------------------
+
+#-[R Code #8]-------------------------------------------------
+fviz_pca_ind(pca_d1, geom.ind="point", axes= c(1,2), habillage =as.factor(data1$liv_group), legend.title = "LIV", repel=TRUE, addEllipses =TRUE) 
+fviz_pca_ind(pca_d1, geom.ind="point", axes= c(2,3), habillage =as.factor(data1$liv_group), legend.title = "LIV", repel=TRUE, addEllipses =TRUE)
+fviz_pca_ind(pca_d1, geom.ind="point", axes= c(3,1), habillage =as.factor(data1$liv_group), legend.title = "LIV", repel=TRUE, addEllipses =TRUE)
+#-[END]-----------------------------------------------------------
+
+#-[R Code #9]-------------------------------------------------
+fviz_screeplot(pca_d2, addlabels =TRUE, ylim =c(0, 50))
+#-[END]-----------------------------------------------------------
+
+#-[R Code #10]-------------------------------------------------
+fviz_pca_var(pca_d2,axes= c(1,2), col.var ="contrib", repel =TRUE) 
+#-[END]-----------------------------------------------------------
+
+#-[R Code #11]-------------------------------------------------
+fviz_pca_var(pca_d2, axes= c(1,2), col.var ="contrib", repel =TRUE) + scale_color_gradient2(low="white", mid="blue", high="red", midpoint=0.6) 
+fviz_pca_var(pca_d2, axes= c(2,3), col.var ="contrib", repel =TRUE) + scale_color_gradient2(low="white", mid="blue", high="red", midpoint=0.6)
+fviz_pca_var(pca_d2, axes= c(3,1), col.var ="contrib", repel =TRUE) + scale_color_gradient2(low="white", mid="blue", high="red", midpoint=0.6) 
+#-[END]-----------------------------------------------------------
+
+#-[R Code #12]-------------------------------------------------
+fviz_contrib(pca_d2, choice = "var", axes = 1) 
+fviz_contrib(pca_d2, choice = "var", axes = 2)
+fviz_contrib(pca_d2, choice = "var", axes = 3) 
+#-[END]-----------------------------------------------------------
+ 
+#-[R Code #13]-------------------------------------------------
+fviz_pca_ind(pca_d2, geom.ind="point", axes= c(1,2), habillage =as.factor(data1$liv_group), legend.title = "LIV", repel=TRUE, addEllipses =TRUE)
+fviz_pca_ind(pca_d2, geom.ind="point", axes= c(2,3), habillage =as.factor(data1$liv_group), legend.title = "LIV", repel=TRUE, addEllipses =TRUE) 
+fviz_pca_ind(pca_d2, geom.ind="point", axes= c(3,1), habillage =as.factor(data1$liv_group), legend.title = "LIV", repel=TRUE, addEllipses =TRUE)
+#-[END]-----------------------------------------------------------
+  
+#-[R Code #14]-------------------------------------------------
+library(corrplot)
+corrplot 0.92 loaded
+#-[END]-----------------------------------------------------------
+
+#-[R Code #15]-------------------------------------------------
+var1 <- get_pca_var(pca_d1)
+#-[END]-----------------------------------------------------------
+
+#-[R Code #16]-------------------------------------------------
+pca_d1 %>% fviz_pca_var(col.var1 = "black") 
+#-[END]-----------------------------------------------------------
+
+#-[R Code #17]-------------------------------------------------
+var1$cos2 %>% round(4) 
+#-[END]-----------------------------------------------------------
+
+#-[R Code #18]-------------------------------------------------
+var1$cos2 %>% corrplot(is.corr = FALSE) 
+#-[END]-----------------------------------------------------------
+
+#-[R Code #19]-------------------------------------------------
+var2 <- get_pca_var(pca_d2)
+#-[END]-----------------------------------------------------------
+
+#-[R Code #20]-------------------------------------------------
+pca_d2 %>% fviz_pca_var(col.var2 = "black") 
+#-[END]-----------------------------------------------------------
+
+#-[R Code #21]-------------------------------------------------
+var2$cos2 %>% round(4)
+#-[END]-----------------------------------------------------------
+
+#-[R Code #22]-------------------------------------------------
+var2$cos2 %>% corrplot(is.corr = FALSE)
+#-[END]-----------------------------------------------------------
